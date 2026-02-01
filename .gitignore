@@ -1,0 +1,9 @@
+# Ralph config (may contain API keys)
+.cursor/ralph-config.json
+
+# Ralph runtime (prompt file is ephemeral)
+.ralph/
+
+# Logs and env
+*.log
+.env
