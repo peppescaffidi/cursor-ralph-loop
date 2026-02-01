@@ -21,7 +21,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Source common functions
 source "$SCRIPT_DIR/ralph-common.sh"
-source "$SCRIPT_DIR/task-parser.sh"
 
 # Source parallel execution (if available)
 if [[ -f "$SCRIPT_DIR/ralph-parallel.sh" ]]; then

@@ -95,10 +95,9 @@ echo "📁 Creating directories..."
 mkdir -p .cursor/ralph-scripts
 mkdir -p .ralph
 mkdir -p tasks
-mkdir -p ralph
 
 # =============================================================================
-# DOWNLOAD SCRIPTS (from ralph/ in this repo)
+# DOWNLOAD SCRIPTS (from repo; installed to .cursor/ralph-scripts)
 # =============================================================================
 
 echo "📥 Downloading Ralph scripts..."
@@ -183,14 +182,14 @@ EOF
 cat > .ralph/errors.log << 'EOF'
 # Error Log
 
-> Failures detected by stream-parser. Use to update guardrails.
+> Failures to review and use to update guardrails.
 
 EOF
 
 cat > .ralph/activity.log << 'EOF'
 # Activity Log
 
-> Real-time tool call logging from stream-parser.
+> Activity log.
 
 EOF
 
@@ -269,11 +268,11 @@ echo "     └── ...                     - Other utilities"
 echo ""
 echo "  📁 .ralph/                     - State (guardrails, progress, logs)"
 echo "  📁 tasks/                      - Put PRD .md here (PRD skill creates them)"
-echo "  📁 ralph/                      - Put ralph/prd.json here (Ralph skill creates it)"
 echo "  📄 progress.txt                - Progress log (agents append when completing a US)"
+echo "  📄 ralph/prd.json              - Create via Ralph skill (folder created when needed)"
 echo ""
 echo "Next steps:"
-echo "  1. Create ralph/prd.json via Cursor skills (PRD skill → tasks/prd-*.md, then Ralph skill → ralph/prd.json)"
+echo "  1. Create ralph/prd.json via Cursor skills (PRD skill → tasks/prd-*.md, then Ralph skill → ralph/prd.json)."
 echo "     Or create ralph/prd.json manually with project, userStories (id, title, acceptanceCriteria, passes)."
 echo "  2. Run: ./.cursor/ralph-scripts/ralph-setup.sh"
 echo ""

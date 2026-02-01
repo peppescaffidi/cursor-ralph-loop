@@ -42,7 +42,6 @@ fi
 mkdir -p .ralph
 mkdir -p .cursor/ralph-scripts
 mkdir -p tasks
-mkdir -p ralph
 
 # =============================================================================
 # prd.json: CREATED VIA SKILLS (not by this script)
@@ -139,14 +138,14 @@ EOF
 cat > .ralph/errors.log << 'EOF'
 # Error Log
 
-> Failures detected by stream-parser. Use to update guardrails.
+> Failures to review and use to update guardrails.
 
 EOF
 
 cat > .ralph/activity.log << 'EOF'
 # Activity Log
 
-> Real-time tool call logging from stream-parser.
+> Activity log.
 
 EOF
 
@@ -202,13 +201,13 @@ echo "  • tasks/              - Put PRD .md here (PRD skill creates e.g. tasks
 echo "  • ralph/prd.json      - Created by Ralph skill from your PRD (not by this script)"
 echo "  • progress.txt        - Progress log (agents append when completing a US)"
 echo "  • .ralph/guardrails.md - Lessons learned (agent updates this)"
-echo "  • .ralph/activity.log - Tool call log (parser updates this)"
-echo "  • .ralph/errors.log   - Failure log (parser updates this)"
+echo "  • .ralph/activity.log - Activity log"
+echo "  • .ralph/errors.log   - Failure log"
 echo ""
 echo "Next steps:"
 echo "  1. If you don't have ralph/prd.json yet: in Cursor use the PRD skill to create"
 echo "     a PRD (tasks/prd-*.md), then the Ralph skill to create ralph/prd.json."
-echo "  2. Run: ./ralph/ralph-setup.sh  (or ralph-loop.sh)"
+echo "  2. Run: ./.cursor/ralph-scripts/ralph-setup.sh  (or ralph-loop.sh)"
 echo ""
 echo "One agent runs per User Story; when done the agent outputs <ralph>US-DONE US-XXX</ralph>"
 echo "and the script updates prd.json. progress.txt is appended by each agent."
