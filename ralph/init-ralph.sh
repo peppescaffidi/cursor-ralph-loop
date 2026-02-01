@@ -55,15 +55,15 @@ mkdir -p tasks
 # prd.json: CREATED VIA SKILLS (not by this script)
 # =============================================================================
 # Flow: 1) PRD skill (in Cursor) → creates tasks/prd-[feature-name].md
-#       2) Ralph skill (in Cursor) → creates ralph/prd.json from that PRD
+#       2) Ralph skill (in Cursor) → creates prd.json in project root from that PRD
 # The PRD skill asks clarifying questions and waits for your answers before
 # writing the .md file. You run both skills manually in Cursor.
 # =============================================================================
 
-if [[ -f "ralph/prd.json" ]]; then
-  echo "✓ ralph/prd.json already exists"
+if [[ -f "prd.json" ]]; then
+  echo "✓ prd.json already exists"
 else
-  echo "📋 ralph/prd.json not found (will be created via Cursor skills)"
+  echo "📋 prd.json not found (will be created via Cursor skills)"
   echo ""
   echo "   To create it, use this flow in Cursor:"
   echo "   1. PRD skill: ask to create a PRD (e.g. \"create a prd for [your feature]\")."
@@ -71,7 +71,7 @@ else
   echo "      create a file in tasks/ (e.g. tasks/prd-my-feature.md)."
   echo "   2. Ralph skill: with that PRD file, ask to convert it (e.g. \"convert this"
   echo "      prd to ralph format\" or \"create prd.json from this\"). It will create"
-  echo "      ralph/prd.json."
+  echo "      prd.json in the project root."
   echo ""
 fi
 
@@ -206,15 +206,15 @@ echo "════════════════════════�
 echo ""
 echo "Files/dirs created:"
 echo "  • tasks/              - Put PRD .md here (PRD skill creates e.g. tasks/prd-my-feature.md)"
-echo "  • ralph/prd.json      - Created by Ralph skill from your PRD (not by this script)"
+echo "  • prd.json            - Created by Ralph skill from your PRD (not by this script)"
 echo "  • progress.txt        - Progress log (agents append when completing a US)"
 echo "  • .ralph/guardrails.md - Lessons learned (agent updates this)"
 echo "  • .ralph/activity.log - Activity log"
 echo "  • .ralph/errors.log   - Failure log"
 echo ""
 echo "Next steps:"
-echo "  1. If you don't have ralph/prd.json yet: in Cursor use the PRD skill to create"
-echo "     a PRD (tasks/prd-*.md), then the Ralph skill to create ralph/prd.json."
+echo "  1. If you don't have prd.json yet: in Cursor use the PRD skill to create"
+echo "     a PRD (tasks/prd-*.md), then the Ralph skill to create prd.json in project root."
 echo "  2. Run: ./.cursor/ralph-scripts/ralph-setup.sh  (or ralph-loop.sh)"
 echo ""
 echo "One agent runs per User Story; when done the agent outputs <ralph>US-DONE US-XXX</ralph>"

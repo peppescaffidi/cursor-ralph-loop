@@ -15,7 +15,7 @@ REPO_RAW="https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${REPO_BR
 echo "═══════════════════════════════════════════════════════════════════"
 echo "🐛 Ralph Wiggum Installer (cursor-ralph-loop)"
 echo "═══════════════════════════════════════════════════════════════════"
-echo "   PRD-based flow: ralph/prd.json, one agent per User Story"
+echo "   PRD-based flow: prd.json (project root), one agent per User Story"
 echo "═══════════════════════════════════════════════════════════════════"
 echo ""
 
@@ -30,7 +30,7 @@ fi
 
 # Check for jq (required for prd.json)
 if ! command -v jq &> /dev/null; then
-  echo "⚠️  jq not found (required for ralph/prd.json)."
+  echo "⚠️  jq not found (required for prd.json)."
   echo "   Install via: brew install jq  (macOS) or your package manager"
   echo ""
 fi
@@ -214,16 +214,16 @@ fi
 # prd.json: CREATED VIA CURSOR SKILLS (not by this script)
 # =============================================================================
 
-if [[ -f "ralph/prd.json" ]]; then
-  echo "✓ ralph/prd.json already exists"
+if [[ -f "prd.json" ]]; then
+  echo "✓ prd.json already exists"
 else
-  echo "📋 ralph/prd.json not found (will be created via Cursor skills)"
+  echo "📋 prd.json not found (will be created via Cursor skills)"
   echo ""
   echo "   To create it:"
   echo "   1. PRD skill: ask Cursor to create a PRD (e.g. \"create a prd for [your feature]\")."
   echo "      The skill will ask clarifying questions, then create tasks/prd-my-feature.md"
   echo "   2. Ralph skill: with that file, ask \"convert this prd to ralph format\" or"
-  echo "      \"create prd.json from this\". It will create ralph/prd.json."
+  echo "      \"create prd.json from this\". It will create prd.json in project root."
   echo ""
 fi
 
@@ -269,11 +269,11 @@ echo ""
 echo "  📁 .ralph/                     - State (guardrails, progress, logs)"
 echo "  📁 tasks/                      - Put PRD .md here (PRD skill creates them)"
 echo "  📄 progress.txt                - Progress log (agents append when completing a US)"
-echo "  📄 ralph/prd.json              - Create via Ralph skill (folder created when needed)"
+echo "  📄 prd.json                   - Create via Ralph skill in project root"
 echo ""
 echo "Next steps:"
-echo "  1. Create ralph/prd.json via Cursor skills (PRD skill → tasks/prd-*.md, then Ralph skill → ralph/prd.json)."
-echo "     Or create ralph/prd.json manually with project, userStories (id, title, acceptanceCriteria, passes)."
+echo "  1. Create prd.json via Cursor skills (PRD skill → tasks/prd-*.md, then Ralph skill → prd.json in root)."
+echo "     Or create prd.json in project root manually with project, userStories (id, title, acceptanceCriteria, passes)."
 echo "  2. Run: ./.cursor/ralph-scripts/ralph-setup.sh"
 echo ""
 echo "Commands:"

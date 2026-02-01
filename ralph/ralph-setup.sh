@@ -9,7 +9,7 @@
 #   ./ralph-setup.sh /path/to/project   # Run in specific project
 #
 # Requirements:
-#   - ralph/prd.json (User Stories with id, title, acceptanceCriteria, passes)
+#   - prd.json in project root (User Stories with id, title, acceptanceCriteria, passes)
 #   - jq installed
 #   - Git repository
 #   - cursor-agent CLI installed
@@ -210,7 +210,7 @@ main() {
   fi
   echo ""
   
-  # Check prerequisites (requires ralph/prd.json and jq)
+  # Check prerequisites (requires prd.json and jq)
   if ! check_prerequisites "$workspace"; then
     exit 1
   fi

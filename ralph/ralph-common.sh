@@ -30,8 +30,8 @@ ROTATE_THRESHOLD="${ROTATE_THRESHOLD:-80000}"
 # Iteration limits (when using PRD: max runs per single US, e.g. 3 retries per US)
 MAX_ITERATIONS="${MAX_ITERATIONS:-3}"
 
-# PRD and progress paths (relative to workspace)
-PRD_FILE="ralph/prd.json"
+# PRD and progress paths (relative to workspace root)
+PRD_FILE="prd.json"
 PROGRESS_TXT="progress.txt"
 
 # Model selection
@@ -72,7 +72,7 @@ get_ralph_dir() {
   echo "$workspace/.ralph"
 }
 
-# Used so prd.json (ralph/prd.json) and progress.txt (root)
+# Used so prd.json and progress.txt (both in project root)
 get_workspace_root() {
   local arg="${1:-.}"
   if [[ -n "$arg" && "$arg" != "." ]]; then
@@ -445,7 +445,7 @@ You are an autonomous development agent. Work ONLY on the User Story below.
 ## FIRST: Read State Files
 
 Before doing anything:
-1. Read \`ralph/prd.json\` - full PRD (project, all user stories)
+1. Read \`prd.json\` - full PRD (project, all user stories)
 2. Read \`progress.txt\` - what previous agents did (append your own entry when done)
 3. Read \`.ralph/guardrails.md\` - lessons from past failures (FOLLOW THESE)
 4. Read \`.ralph/errors.log\` - recent failures to avoid
@@ -477,7 +477,7 @@ $us_json
 2. Run typecheck and tests (e.g. \`npm run typecheck\`, \`npm run test\`) and fix any failures.
 3. **When this User Story is fully done**: append one line to \`progress.txt\` with date, US id, and short summary (e.g. \`[YYYY-MM-DD] $us_id: summary of what was done\`).
 4. **Then** output exactly: \`<ralph>US-DONE $us_id</ralph>\`
-   - The script will update \`ralph/prd.json\` (set \`passes: true\` for this US). Do NOT edit prd.json yourself.
+   - The script will update \`prd.json\` (set \`passes: true\` for this US). Do NOT edit prd.json yourself.
 5. If stuck 3+ times on the same issue: output \`<ralph>GUTTER</ralph>\`
 
 ## Learning from Failures
@@ -765,7 +765,7 @@ check_prerequisites() {
   if [[ ! -f "$prd_path" ]]; then
     echo "❌ No $PRD_FILE found in $workspace"
     echo ""
-    echo "Create ralph/prd.json with project, userStories (id, title, description, acceptanceCriteria, priority, passes)."
+    echo "Create prd.json in project root with project, userStories (id, title, description, acceptanceCriteria, priority, passes)."
     return 1
   fi
   

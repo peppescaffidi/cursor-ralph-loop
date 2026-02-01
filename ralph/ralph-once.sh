@@ -15,7 +15,7 @@
 #   - If satisfied, run ralph-setup.sh or ralph-loop.sh for full loop
 #
 # Requirements:
-#   - ralph/prd.json and jq
+#   - prd.json in project root and jq
 #   - Git repository
 #   - cursor-agent CLI installed
 
@@ -50,7 +50,7 @@ Examples:
   
 After reviewing the results:
   - If satisfied: run ./ralph-setup.sh for full loop
-  - If issues: fix them, update ralph/prd.json or guardrails, run again
+  - If issues: fix them, update prd.json or guardrails, run again
 EOF
 }
 
@@ -85,7 +85,7 @@ done
 # =============================================================================
 
 main() {
-  # Resolve workspace (project root: ralph/prd.json, progress.txt live there)
+  # Resolve workspace (project root: prd.json, progress.txt live there)
   WORKSPACE="$(get_workspace_root "${WORKSPACE:-.}")"
   
   # Show banner
@@ -191,7 +191,7 @@ main() {
   esac
   
   echo ""
-  echo "Review: git log --oneline -5; cat progress.txt; cat ralph/prd.json"
+  echo "Review: git log --oneline -5; cat progress.txt; cat prd.json"
   echo "Next: ./ralph-setup.sh for full loop, or ./ralph-once.sh to run another US"
   echo ""
 }

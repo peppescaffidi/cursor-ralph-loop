@@ -32,15 +32,15 @@ Ho unito ciò che fanno le **Claude/Cursor skills** con ciò che aveva già fatt
 
 ### 3.1. File di origine: PRD generato da skill PRD e poi skill Ralph
 
-- **Fonte lavoro** non è più `RALPH_TASK.md` (checkbox), ma **`ralph/prd.json`** (User Stories con `id`, `title`, `acceptanceCriteria`, `priority`, `passes`).
+- **Fonte lavoro** non è più `RALPH_TASK.md` (checkbox), ma **`prd.json`** in root progetto (User Stories con `id`, `title`, `acceptanceCriteria`, `priority`, `passes`).
 - **Creazione del PRD** (come in [ralph-wiggum-claude-code-](https://github.com/simone-rizzo/ralph-wiggum-claude-code-)):
   1. **Skill PRD** (`.claude/skills/prd`): l’utente chiede di creare un PRD; la skill fa domande chiarificatrici e scrive `tasks/prd-[feature].md`.
-  2. **Skill Ralph** (`.claude/skills/ralph`): l’utente passa quel file e chiede di convertirlo in formato Ralph; la skill crea **`ralph/prd.json`**.
+  2. **Skill Ralph** (`.claude/skills/ralph`): l’utente passa quel file e chiede di convertirlo in formato Ralph; la skill crea **`prd.json`** nella root del progetto.
 - **Completamento**: tutte le User Story con `passes: true` (invece di “tutte le checkbox `[x]`”).
 - **Segnale fine US**: l’agente non modifica il JSON; emette **`<ralph>US-DONE US-XXX</ralph>`** e uno script aggiorna `prd.json` con `jq` (evita JSON malformato).
 - **Progresso**: `progress.txt` in root (append da ogni agente) + campo `passes` in `prd.json`.
 
-Flusso init: `init-ralph.sh` crea `tasks/` e `progress.txt`, non un template `prd.json`; le due skill si usano in Cursor per generare prima il PRD in markdown e poi `ralph/prd.json`.
+Flusso init: `init-ralph.sh` crea `tasks/` e `progress.txt`, non un template `prd.json`; le due skill si usano in Cursor per generare prima il PRD in markdown e poi `prd.json` in root.
 
 ### 3.2. Contesto ripulito ad ogni US (con idee prese da Agrim Singh)
 
@@ -57,8 +57,8 @@ In sintesi: contesto **ripulito a ogni US** (una run = una US), ma con le “saf
 
 | Aspetto | ralph-wiggum-cursor (Agrim) | Questa variante (cursor-ralph-loop) |
 |--------|-----------------------------|-------------------------------------|
-| **Fonte lavoro** | `RALPH_TASK.md` (checkbox) | `ralph/prd.json` (User Stories) |
-| **Come si crea** | Edit manuale | Skill PRD → `tasks/prd-*.md` → Skill Ralph → `ralph/prd.json` |
+| **Fonte lavoro** | `RALPH_TASK.md` (checkbox) | `prd.json` in root (User Stories) |
+| **Come si crea** | Edit manuale | Skill PRD → `tasks/prd-*.md` → Skill Ralph → `prd.json` in root |
 | **Completamento** | Tutte le `[ ]` → `[x]` | Tutte le US con `passes: true` |
 | **Segnale fine US** | (N/A) | `<ralph>US-DONE US-XXX</ralph>`; script aggiorna prd con jq |
 | **Rotazione** | Nuovo agente a 80k token | Un agente per US; ROTATE = retry stessa US con contesto pulito |
@@ -70,7 +70,7 @@ In sintesi: contesto **ripulito a ogni US** (una run = una US), ma con le “saf
 
 - **Bash** (macOS/Linux)
 - **Git** (repository nel progetto)
-- **jq** – per leggere/aggiornare `ralph/prd.json` → `brew install jq` (macOS) o il tuo package manager
+- **jq** – per leggere/aggiornare `prd.json` → `brew install jq` (macOS) o il tuo package manager
 - **cursor-agent** – CLI Cursor → `curl https://cursor.com/install -fsS | bash`
 - **gum** (opzionale, per UI interattiva) → `brew install gum`
 
@@ -78,22 +78,9 @@ In sintesi: contesto **ripulito a ogni US** (una run = una US), ma con le “saf
 
 ## Installazione nel tuo progetto
 
-### Opzione A: Submodule Git
-
 ```bash
 cd /path/to/tuo-progetto
-git submodule add https://github.com/TUO-USER/cursor-ralph-loop.git ralph
-./ralph/init-ralph.sh
-```
-
-### Opzione B: Copia della cartella
-
-```bash
-cd /path/to/tuo-progetto
-git clone https://github.com/TUO-USER/cursor-ralph-loop.git .ralph-repo
-cp -R .ralph-repo/ralph ./ralph
-./ralph/init-ralph.sh
-# opzionale: rm -rf .ralph-repo
+curl -fsSL https://raw.githubusercontent.com/peppscaffidi/cursor-ralph-loop/master/install.sh
 ```
 
 `init-ralph.sh` crea: `.ralph/`, `tasks/`, `progress.txt`, e aggiorna `.gitignore`; opzionalmente copia gli script in `.cursor/ralph-scripts/`.
@@ -102,14 +89,14 @@ cp -R .ralph-repo/ralph ./ralph
 
 ## Uso
 
-### 1. Avere un `ralph/prd.json`
+### 1. Avere un `prd.json` in root progetto
 
 **Con le Cursor skills (consigliato):**
 
 1. **Skill PRD** – “crea un PRD per [feature]” → la skill scrive `tasks/prd-my-feature.md`.
-2. **Skill Ralph** – con quel file: “converti questo PRD in formato Ralph” / “crea prd.json da questo” → crea/aggiorna `ralph/prd.json`.
+2. **Skill Ralph** – con quel file: “converti questo PRD in formato Ralph” / “crea prd.json da questo” → crea/aggiorna `prd.json` nella root del progetto.
 
-**A mano:** crea `ralph/prd.json` con `project`, `description`, `userStories[]` (per ogni US: `id`, `title`, `description`, `acceptanceCriteria[]`, `priority`, `passes`, `notes`).
+**A mano:** crea `prd.json` nella root con `project`, `description`, `userStories[]` (per ogni US: `id`, `title`, `description`, `acceptanceCriteria[]`, `priority`, `passes`, `notes`).
 
 ### 2. Eseguire il loop
 

@@ -215,7 +215,7 @@ cleanup_all_worktrees() {
 # PRD HELPERS (for parallel mode - uses same prd.json as ralph-loop.sh)
 # =============================================================================
 
-PRD_FILE="${PRD_FILE:-ralph/prd.json}"
+PRD_FILE="${PRD_FILE:-prd.json}"
 
 # Get incomplete User Story IDs sorted by priority (lower = first)
 # Output: one us_id per line
@@ -263,7 +263,7 @@ You are Agent ${display_agent_num} (job: ${job_id}) in an isolated worktree.
   - How to run tests
   - Any gotchas
 - Do NOT touch .ralph/progress.md (causes merge conflicts; use progress.txt instead)
-- Do NOT edit ralph/prd.json - the orchestrator will update it when you merge
+- Do NOT edit prd.json - the orchestrator will update it when you merge
 
 ## Conflict Prevention (CRITICAL)
 Do NOT modify these files unless your task EXPLICITLY requires it:
@@ -473,20 +473,20 @@ run_parallel_tasks() {
   # =========================================================================
   # PREFLIGHT CHECK: Ensure prd.json exists and is valid
   # =========================================================================
-  # Parallel mode requires ralph/prd.json (same as ralph-loop.sh):
+  # Parallel mode requires prd.json in project root (same as ralph-loop.sh):
   # - Source of work: User Stories with id, title, acceptanceCriteria, passes
   # - Merges and reruns are deterministic
   
-  local prd_path="$workspace/ralph/prd.json"
+  local prd_path="$workspace/$PRD_FILE"
   if [[ ! -f "$prd_path" ]]; then
     echo ""
-    echo "❌ ralph/prd.json not found."
+    echo "❌ prd.json not found in project root."
     echo ""
     echo "   Parallel mode uses prd.json as the source of work (same as sequential ralph-loop.sh)."
     echo ""
-    echo "   Create ralph/prd.json via Cursor skills:"
+    echo "   Create prd.json in project root via Cursor skills:"
     echo "   1. PRD skill → tasks/prd-*.md"
-    echo "   2. Ralph skill → \"convert this prd to ralph format\" → ralph/prd.json"
+    echo "   2. Ralph skill → \"convert this prd to ralph format\" → prd.json"
     echo ""
     echo "   Or create manually with project, userStories (id, title, acceptanceCriteria, priority, passes)."
     echo ""
@@ -495,16 +495,16 @@ run_parallel_tasks() {
   
   if ! jq -e '.userStories | length' "$prd_path" >/dev/null 2>&1; then
     echo ""
-    echo "❌ ralph/prd.json is invalid or missing userStories array."
+    echo "❌ prd.json is invalid or missing userStories array."
     return 1
   fi
   
   # Optional: warn about uncommitted changes to prd.json (not fatal)
   local modified_prd
-  modified_prd=$(git -C "$original_dir" status --porcelain -- "ralph/prd.json" 2>/dev/null | grep '^ M\|^M \|^MM' || true)
+  modified_prd=$(git -C "$original_dir" status --porcelain -- "prd.json" 2>/dev/null | grep '^ M\|^M \|^MM' || true)
   if [[ -n "$modified_prd" ]]; then
     echo ""
-    echo "⚠️  ralph/prd.json has uncommitted changes."
+    echo "⚠️  prd.json has uncommitted changes."
     echo "   Worktrees will use the last committed version."
     echo ""
   fi
@@ -533,7 +533,7 @@ run_parallel_tasks() {
   done < <(prd_get_incomplete_us_sorted "$workspace")
   
   if [[ ${#incomplete_us[@]} -eq 0 ]]; then
-    echo "✅ No pending User Stories (all complete in ralph/prd.json)!"
+    echo "✅ No pending User Stories (all complete in prd.json)!"
     return 0
   fi
   
@@ -633,7 +633,7 @@ run_parallel_tasks() {
       
       # Copy prd.json and progress.txt to worktree (same as ralph-loop.sh)
       mkdir -p "$worktree_dir/ralph" "$worktree_dir/.ralph"
-      cp "$workspace/ralph/prd.json" "$worktree_dir/ralph/" 2>/dev/null || true
+      cp "$workspace/prd.json" "$worktree_dir/" 2>/dev/null || true
       cp "$workspace/progress.txt" "$worktree_dir/" 2>/dev/null || true
       if [[ ! -f "$worktree_dir/progress.txt" ]]; then
         echo "=== Ralph progress log ===" > "$worktree_dir/progress.txt"
@@ -825,12 +825,12 @@ run_parallel_tasks() {
 
     # Commit prd.json updates so integration PR includes completion state
     if [[ ${#integrated_us_ids[@]} -gt 0 ]]; then
-      if git -C "$original_dir" status --porcelain -- "ralph/prd.json" 2>/dev/null | grep -q .; then
+      if git -C "$original_dir" status --porcelain -- "prd.json" 2>/dev/null | grep -q .; then
         local git_name git_email
         git_name=$(git -C "$original_dir" config user.name 2>/dev/null || true)
         git_email=$(git -C "$original_dir" config user.email 2>/dev/null || true)
 
-        git -C "$original_dir" add "ralph/prd.json" >/dev/null 2>&1 || true
+        git -C "$original_dir" add "prd.json" >/dev/null 2>&1 || true
 
         local commit_body="Run: ${RUN_ID}
 Batch: ${batch_num}
@@ -995,7 +995,7 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     esac
   done
   
-  # Resolve workspace to project root (ralph/prd.json, progress.txt live there)
+  # Resolve workspace to project root (prd.json, progress.txt live there)
   WORKSPACE="$(get_workspace_root "${WORKSPACE:-.}")"
   
   # Run parallel tasks
