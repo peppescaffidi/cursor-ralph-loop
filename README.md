@@ -80,7 +80,7 @@ In sintesi: contesto **ripulito a ogni US** (una run = una US), ma con le “saf
 
 ```bash
 cd /path/to/tuo-progetto
-curl -fsSL https://raw.githubusercontent.com/peppscaffidi/cursor-ralph-loop/master/install.sh
+curl -fsSL https://raw.githubusercontent.com/peppescaffidi/cursor-ralph-loop/master/install.sh | bash
 ```
 
 `init-ralph.sh` crea: `.ralph/`, `tasks/`, `progress.txt`, e aggiorna `.gitignore`; opzionalmente copia gli script in `.cursor/ralph-scripts/`.
