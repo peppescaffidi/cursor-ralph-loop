@@ -11,7 +11,7 @@ Converts existing PRDs to the prd.json format that Ralph uses for autonomous exe
 
 ## The Job
 
-Take a PRD (markdown file or text) and convert it to `prd.json` in the **project root** (same location as `progress.txt`).
+Take a PRD (markdown file or text) and convert it to `prd.json` in the **tasks/** folder (same folder as the PRD .md files and `progress.txt`).
 
 ---
 
@@ -243,12 +243,12 @@ Add ability to mark tasks with different statuses.
 
 **Before writing a new prd.json, check if there is an existing one from a different feature:**
 
-1. Read the current `prd.json` if it exists
+1. Read the current `tasks/prd.json` if it exists
 2. Check if `branchName` differs from the new feature's branch name
-3. If different AND `progress.txt` has content beyond the header:
+3. If different AND `tasks/progress.txt` has content beyond the header:
    - Create archive folder: `archive/YYYY-MM-DD-feature-name/`
-   - Copy current `prd.json` and `progress.txt` to archive
-   - Reset `progress.txt` with fresh header
+   - Copy current `tasks/prd.json` and `tasks/progress.txt` to archive
+   - Reset `tasks/progress.txt` with fresh header
 
 **The ralph.sh script handles this automatically** when you run it, but if you are manually updating prd.json between runs, archive first.
 
@@ -258,7 +258,7 @@ Add ability to mark tasks with different statuses.
 
 Before writing prd.json, verify:
 
-- [ ] **Previous run archived** (if prd.json exists with different branchName, archive it first)
+- [ ] **Previous run archived** (if tasks/prd.json exists with different branchName, archive it first)
 - [ ] Each story is completable in one iteration (small enough)
 - [ ] Stories are ordered by dependency (schema to backend to UI)
 - [ ] Every story has "Typecheck passes" as criterion

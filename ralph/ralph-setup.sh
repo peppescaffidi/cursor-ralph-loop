@@ -9,7 +9,7 @@
 #   ./ralph-setup.sh /path/to/project   # Run in specific project
 #
 # Requirements:
-#   - prd.json in project root (User Stories with id, title, acceptanceCriteria, passes)
+#   - tasks/prd.json (User Stories with id, title, acceptanceCriteria, passes)
 #   - jq installed
 #   - Git repository
 #   - cursor-agent CLI installed

@@ -25,7 +25,7 @@
 #   -h, --help             Show this help
 #
 # Requirements:
-#   - prd.json in project root and jq
+#   - tasks/prd.json and jq
 #   - Git repository
 #   - cursor-agent CLI installed
 
@@ -143,13 +143,13 @@ done
 # =============================================================================
 
 main() {
-  # Resolve workspace (project root: prd.json, progress.txt live there)
+  # Resolve workspace (project root: tasks/prd.json, tasks/progress.txt)
   WORKSPACE="$(get_workspace_root "${WORKSPACE:-.}")"
   
   # Show banner
   show_banner
   
-  # Check prerequisites (prd.json, jq, cursor-agent)
+  # Check prerequisites (tasks/prd.json, jq, cursor-agent)
   if ! check_prerequisites "$WORKSPACE"; then
     exit 1
   fi

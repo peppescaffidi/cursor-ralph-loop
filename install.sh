@@ -15,7 +15,7 @@ REPO_RAW="https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${REPO_BR
 echo "═══════════════════════════════════════════════════════════════════"
 echo "🐛 Ralph Wiggum Installer (cursor-ralph-loop)"
 echo "═══════════════════════════════════════════════════════════════════"
-echo "   PRD-based flow: prd.json (project root), one agent per User Story"
+echo "   PRD-based flow: tasks/prd.json, tasks/progress.txt, one agent per User Story"
 echo "═══════════════════════════════════════════════════════════════════"
 echo ""
 
@@ -95,6 +95,25 @@ echo "📁 Creating directories..."
 mkdir -p .cursor/ralph-scripts
 mkdir -p .ralph
 mkdir -p tasks
+mkdir -p .claude/skills/prd
+mkdir -p .claude/skills/ralph
+
+# =============================================================================
+# DOWNLOAD .claude/ SKILLS (PRD + Ralph)
+# =============================================================================
+
+echo "📥 Downloading .claude/ skills..."
+if curl -fsSL "$REPO_RAW/.claude/skills/prd/SKILL.md" -o ".claude/skills/prd/SKILL.md" 2>/dev/null; then
+  echo "   ✓ .claude/skills/prd/SKILL.md"
+else
+  echo "   ⚠️  Could not download PRD skill"
+fi
+if curl -fsSL "$REPO_RAW/.claude/skills/ralph/SKILL.md" -o ".claude/skills/ralph/SKILL.md" 2>/dev/null; then
+  echo "   ✓ .claude/skills/ralph/SKILL.md"
+else
+  echo "   ⚠️  Could not download Ralph skill"
+fi
+echo "✓ Skills installed to .claude/skills/"
 
 # =============================================================================
 # DOWNLOAD SCRIPTS (from repo; installed to .cursor/ralph-scripts)
@@ -198,32 +217,33 @@ echo "0" > .ralph/.iteration
 echo "✓ .ralph/ initialized"
 
 # =============================================================================
-# CREATE progress.txt IN ROOT
+# CREATE tasks/progress.txt
 # =============================================================================
 
-if [[ ! -f "progress.txt" ]]; then
-  echo "📝 Creating progress.txt..."
-  echo "=== Ralph progress log ===" > progress.txt
+mkdir -p tasks
+if [[ ! -f "tasks/progress.txt" ]]; then
+  echo "📝 Creating tasks/progress.txt..."
+  echo "=== Ralph progress log ===" > tasks/progress.txt
   echo "   Agents will append entries here when they complete a User Story."
-  echo "✓ Created progress.txt"
+  echo "✓ Created tasks/progress.txt"
 else
-  echo "✓ progress.txt already exists"
+  echo "✓ tasks/progress.txt already exists"
 fi
 
 # =============================================================================
 # prd.json: CREATED VIA CURSOR SKILLS (not by this script)
 # =============================================================================
 
-if [[ -f "prd.json" ]]; then
-  echo "✓ prd.json already exists"
+if [[ -f "tasks/prd.json" ]]; then
+  echo "✓ tasks/prd.json already exists"
 else
-  echo "📋 prd.json not found (will be created via Cursor skills)"
+  echo "📋 tasks/prd.json not found (will be created via Cursor skills)"
   echo ""
   echo "   To create it:"
   echo "   1. PRD skill: ask Cursor to create a PRD (e.g. \"create a prd for [your feature]\")."
   echo "      The skill will ask clarifying questions, then create tasks/prd-my-feature.md"
   echo "   2. Ralph skill: with that file, ask \"convert this prd to ralph format\" or"
-  echo "      \"create prd.json from this\". It will create prd.json in project root."
+  echo "      \"create prd.json from this\". It will create tasks/prd.json."
   echo ""
 fi
 
@@ -266,14 +286,13 @@ echo "     ├── ralph-loop.sh           - CLI mode (scripting)"
 echo "     ├── ralph-once.sh           - Single US (testing)"
 echo "     └── ...                     - Other utilities"
 echo ""
+echo "  📁 .claude/skills/             - PRD + Ralph skills (create PRD, convert to prd.json)"
 echo "  📁 .ralph/                     - State (guardrails, progress, logs)"
-echo "  📁 tasks/                      - Put PRD .md here (PRD skill creates them)"
-echo "  📄 progress.txt                - Progress log (agents append when completing a US)"
-echo "  📄 prd.json                   - Create via Ralph skill in project root"
+echo "  📁 tasks/                      - PRD .md (skill), prd.json (Ralph), progress.txt (log)"
 echo ""
 echo "Next steps:"
-echo "  1. Create prd.json via Cursor skills (PRD skill → tasks/prd-*.md, then Ralph skill → prd.json in root)."
-echo "     Or create prd.json in project root manually with project, userStories (id, title, acceptanceCriteria, passes)."
+echo "  1. Create tasks/prd.json via Cursor skills (PRD skill → tasks/prd-*.md, then Ralph skill → tasks/prd.json)."
+echo "     Or create tasks/prd.json manually with project, userStories (id, title, acceptanceCriteria, passes)."
 echo "  2. Run: ./.cursor/ralph-scripts/ralph-setup.sh"
 echo ""
 echo "Commands:"

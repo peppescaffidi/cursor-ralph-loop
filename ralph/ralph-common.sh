@@ -30,9 +30,9 @@ ROTATE_THRESHOLD="${ROTATE_THRESHOLD:-80000}"
 # Iteration limits (when using PRD: max runs per single US, e.g. 3 retries per US)
 MAX_ITERATIONS="${MAX_ITERATIONS:-3}"
 
-# PRD and progress paths (relative to workspace root)
-PRD_FILE="prd.json"
-PROGRESS_TXT="progress.txt"
+# PRD and progress paths (relative to workspace root; both live in tasks/)
+PRD_FILE="tasks/prd.json"
+PROGRESS_TXT="tasks/progress.txt"
 
 # Model selection
 DEFAULT_MODEL="auto"
@@ -72,7 +72,7 @@ get_ralph_dir() {
   echo "$workspace/.ralph"
 }
 
-# Used so prd.json and progress.txt (both in project root)
+# Used so prd.json and progress.txt (both in tasks/)
 get_workspace_root() {
   local arg="${1:-.}"
   if [[ -n "$arg" && "$arg" != "." ]]; then
@@ -445,8 +445,8 @@ You are an autonomous development agent. Work ONLY on the User Story below.
 ## FIRST: Read State Files
 
 Before doing anything:
-1. Read \`prd.json\` - full PRD (project, all user stories)
-2. Read \`progress.txt\` - what previous agents did (append your own entry when done)
+1. Read \`tasks/prd.json\` - full PRD (project, all user stories)
+2. Read \`tasks/progress.txt\` - what previous agents did (append your own entry when done)
 3. Read \`.ralph/guardrails.md\` - lessons from past failures (FOLLOW THESE)
 4. Read \`.ralph/errors.log\` - recent failures to avoid
 
@@ -475,9 +475,9 @@ $us_json
 
 1. Implement or complete the acceptance criteria for this User Story.
 2. Run typecheck and tests (e.g. \`npm run typecheck\`, \`npm run test\`) and fix any failures.
-3. **When this User Story is fully done**: append one line to \`progress.txt\` with date, US id, and short summary (e.g. \`[YYYY-MM-DD] $us_id: summary of what was done\`).
+3. **When this User Story is fully done**: append one line to \`tasks/progress.txt\` with date, US id, and short summary (e.g. \`[YYYY-MM-DD] $us_id: summary of what was done\`).
 4. **Then** output exactly: \`<ralph>US-DONE $us_id</ralph>\`
-   - The script will update \`prd.json\` (set \`passes: true\` for this US). Do NOT edit prd.json yourself.
+   - The script will update \`tasks/prd.json\` (set \`passes: true\` for this US). Do NOT edit prd.json yourself.
 5. If stuck 3+ times on the same issue: output \`<ralph>GUTTER</ralph>\`
 
 ## Learning from Failures
@@ -486,7 +486,7 @@ When something fails: check \`.ralph/errors.log\`, figure out root cause, add a 
 
 ## Context Rotation
 
-If you see a warning that context is running low: finish your current edit, commit, append to \`progress.txt\`, then output \`<ralph>US-DONE $us_id</ralph>\` if done or you will be rotated and the next agent will retry this same US.
+If you see a warning that context is running low: finish your current edit, commit, append to \`tasks/progress.txt\`, then output \`<ralph>US-DONE $us_id</ralph>\` if done or you will be rotated and the next agent will retry this same US.
 
 Begin by reading the state files, then work on this User Story only.
 EOF
@@ -652,8 +652,9 @@ run_ralph_loop() {
   echo "🚀 Starting Ralph loop (one agent per US, max $MAX_ITERATIONS runs per US)..."
   echo ""
   
-  # Ensure progress.txt exists
+  # Ensure tasks/progress.txt exists
   if [[ ! -f "$workspace/$PROGRESS_TXT" ]]; then
+    mkdir -p "$(dirname "$workspace/$PROGRESS_TXT")"
     echo "=== Ralph progress log ===" > "$workspace/$PROGRESS_TXT"
   fi
   
@@ -740,7 +741,7 @@ run_ralph_loop() {
     return 0
   fi
   
-  echo "⚠️  Loop ended. Some User Stories may be incomplete. Check $PRD_FILE and progress.txt"
+  echo "⚠️  Loop ended. Some User Stories may be incomplete. Check $PRD_FILE and $PROGRESS_TXT"
   return 1
 }
 
@@ -765,7 +766,7 @@ check_prerequisites() {
   if [[ ! -f "$prd_path" ]]; then
     echo "❌ No $PRD_FILE found in $workspace"
     echo ""
-    echo "Create prd.json in project root with project, userStories (id, title, description, acceptanceCriteria, priority, passes)."
+    echo "Create tasks/prd.json with project, userStories (id, title, description, acceptanceCriteria, priority, passes)."
     return 1
   fi
   
