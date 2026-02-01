@@ -779,6 +779,19 @@ check_prerequisites() {
     return 1
   fi
   
+  # Check for stream-parser (required for run_iteration)
+  local script_dir="${SCRIPT_DIR:-$_RALPH_SCRIPT_DIR}"
+  if [[ -z "$script_dir" ]]; then
+    script_dir="$(dirname "${BASH_SOURCE[0]}")"
+  fi
+  local stream_parser="$script_dir/stream-parser.sh"
+  if [[ ! -x "$stream_parser" ]]; then
+    echo "❌ stream-parser.sh not found or not executable: $stream_parser"
+    echo ""
+    echo "Ralph requires stream-parser.sh for token tracking and gutter detection."
+    return 1
+  fi
+  
   # Check for git repo
   if ! git -C "$workspace" rev-parse --git-dir > /dev/null 2>&1; then
     echo "❌ Not a git repository"

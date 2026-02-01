@@ -279,12 +279,23 @@ Begin by reading the state files, then work on this User Story only."
   mkdir -p "$worktree_dir/.ralph"
   mkdir -p "$worktree_dir/.ralph/parallel/${RUN_ID}"
   
-  # Run cursor-agent
+  # Run cursor-agent (optionally via stream-parser for activity.log/errors.log)
   echo "[$(date '+%H:%M:%S')] Agent ${display_agent_num} (job ${job_id}, US ${us_id}) starting" >> "$log_file"
   
+  local stream_parser="${_RALPH_SCRIPT_DIR:-$SCRIPT_DIR}/stream-parser.sh"
+  local agent_rc=0
+  
   # Headless mode: auto-approve MCP servers to avoid interactive prompts.
-  # Also detach stdin to prevent any accidental blocking on input.
-  if cd "$worktree_dir" && cursor-agent -p --approve-mcps --force --output-format stream-json --model "$MODEL" "$prompt" >> "$log_file" 2>&1 < /dev/null; then
+  # Pipe through stream-parser if available for activity.log, errors.log, token tracking.
+  if [[ -x "$stream_parser" ]]; then
+    cd "$worktree_dir" && cursor-agent -p --approve-mcps --force --output-format stream-json --model "$MODEL" "$prompt" 2>&1 < /dev/null | tee -a "$log_file" | "$stream_parser" "$worktree_dir" > /dev/null
+    agent_rc=${PIPESTATUS[0]}
+  else
+    cd "$worktree_dir" && cursor-agent -p --approve-mcps --force --output-format stream-json --model "$MODEL" "$prompt" >> "$log_file" 2>&1 < /dev/null
+    agent_rc=$?
+  fi
+  
+  if [[ $agent_rc -eq 0 ]]; then
     echo "done" > "$status_file"
     
     # Check if any commits were made
