@@ -129,7 +129,7 @@ SCRIPTS=(
   "ralph-parallel.sh"
   "ralph-retry.sh"
   "init-ralph.sh"
-  "ralph.sh"
+  "stream-parser.sh"
 )
 
 for script in "${SCRIPTS[@]}"; do
