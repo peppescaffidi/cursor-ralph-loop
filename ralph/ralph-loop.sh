@@ -143,14 +143,8 @@ done
 # =============================================================================
 
 main() {
-  # Resolve workspace
-  if [[ -z "$WORKSPACE" ]]; then
-    WORKSPACE="$(pwd)"
-  elif [[ "$WORKSPACE" == "." ]]; then
-    WORKSPACE="$(pwd)"
-  else
-    WORKSPACE="$(cd "$WORKSPACE" && pwd)"
-  fi
+  # Resolve workspace (project root: ralph/prd.json, progress.txt live there)
+  WORKSPACE="$(get_workspace_root "${WORKSPACE:-.}")"
   
   # Show banner
   show_banner

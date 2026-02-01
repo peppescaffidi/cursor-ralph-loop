@@ -7,6 +7,14 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SKILL_DIR="$(dirname "$SCRIPT_DIR")"
 
+# Run from project root: prd.json in ralph/, progress.txt in root.
+if [[ "$SCRIPT_DIR" == *"/.cursor/ralph-scripts" ]]; then
+  WORKSPACE_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+else
+  WORKSPACE_ROOT="$(pwd)"
+fi
+cd "$WORKSPACE_ROOT"
+
 echo "═══════════════════════════════════════════════════════════════════"
 echo "🐛 Ralph Wiggum Initialization"
 echo "═══════════════════════════════════════════════════════════════════"

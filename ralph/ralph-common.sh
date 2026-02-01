@@ -72,6 +72,21 @@ get_ralph_dir() {
   echo "$workspace/.ralph"
 }
 
+# Used so prd.json (ralph/prd.json) and progress.txt (root)
+get_workspace_root() {
+  local arg="${1:-.}"
+  if [[ -n "$arg" && "$arg" != "." ]]; then
+    echo "$(cd "$arg" && pwd)"
+    return
+  fi
+  # Scripts in repo: PROJECT_ROOT/.cursor/ralph-scripts → project root = SCRIPT_DIR/../..
+  if [[ "$_RALPH_SCRIPT_DIR" == *"/.cursor/ralph-scripts" ]]; then
+    echo "$(cd "$_RALPH_SCRIPT_DIR/../.." && pwd)"
+    return
+  fi
+  echo "$(pwd)"
+}
+
 # Get current iteration from .ralph/.iteration
 get_iteration() {
   local workspace="${1:-.}"

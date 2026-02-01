@@ -195,11 +195,8 @@ show_header() {
 # =============================================================================
 
 main() {
-  local workspace="${1:-.}"
-  if [[ "$workspace" == "." ]]; then
-    workspace="$(pwd)"
-  fi
-  workspace="$(cd "$workspace" && pwd)"
+  local workspace
+  workspace="$(get_workspace_root "${1:-.}")"
   
   # Show banner
   echo ""

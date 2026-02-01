@@ -995,6 +995,9 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     esac
   done
   
+  # Resolve workspace to project root (ralph/prd.json, progress.txt live there)
+  WORKSPACE="$(get_workspace_root "${WORKSPACE:-.}")"
+  
   # Run parallel tasks
   run_parallel_tasks "$WORKSPACE" "$MAX_PARALLEL" "${BASE_BRANCH:-}"
 fi
