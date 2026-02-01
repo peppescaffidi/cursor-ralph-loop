@@ -9,7 +9,7 @@ set -euo pipefail
 # Repository: change if you use a fork
 REPO_OWNER="${RALPH_REPO_OWNER:-peppescaffidi}"
 REPO_NAME="${RALPH_REPO_NAME:-cursor-ralph-loop}"
-REPO_BRANCH="${RALPH_REPO_BRANCH:-main}"
+REPO_BRANCH="${RALPH_REPO_BRANCH:-master}"
 REPO_RAW="https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${REPO_BRANCH}"
 
 echo "═══════════════════════════════════════════════════════════════════"
@@ -109,8 +109,6 @@ SCRIPTS=(
   "ralph-loop.sh"
   "ralph-once.sh"
   "ralph-parallel.sh"
-  "stream-parser.sh"
-  "task-parser.sh"
   "ralph-retry.sh"
   "init-ralph.sh"
   "ralph.sh"
